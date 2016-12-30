@@ -21,8 +21,8 @@ public class BoardImpl implements Board {
     }
 
     private boolean validPos(IntVector2D toCheck) {
-        return 0 < toCheck.X() && toCheck.X() < getWidth()
-                && 0 < toCheck.Y() && toCheck.Y() < getHeight();
+        return 0 <= toCheck.X() && toCheck.X() < getWidth()
+                && 0 <= toCheck.Y() && toCheck.Y() < getHeight();
     }
 
     private void validatePos(IntVector2D toCheck) {
