@@ -16,7 +16,7 @@ public class BoardWithEvents implements BoardEventManager, Board {
     }
 
     @Override
-    public void addOnChangeListener(Consumer<Action> listener) {
+    public void addOnBoardChangeListener(Consumer<Action> listener) {
         listeners.add(listener);
     }
 

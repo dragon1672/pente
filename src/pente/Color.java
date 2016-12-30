@@ -5,7 +5,7 @@ public enum Color {
     BLACK(true),
     EMPTY(false);
 
-    final boolean isPlayer;
+    public final boolean isPlayer;
 
     Color(boolean isPlayer) {
         this.isPlayer = isPlayer;
