@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class BoardImpl implements Board {
     private final int width;
     private final int height;
-    private Color[][] board;
+    private Map<IntVector2D,Color> board = new HashMap<>();
 
     private Stack<BoardDiff> boardDiffHistory = new Stack<>();
     private Stack<BoardDiff> redoCache = new Stack<>();
@@ -18,12 +18,6 @@ public class BoardImpl implements Board {
     public BoardImpl(int width, int height) {
         this.width = width;
         this.height = height;
-        board = new Color[width][height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                setColor(IntVector2D.create(x,y),Color.EMPTY);
-            }
-        }
     }
 
     private boolean validPos(IntVector2D toCheck) {
@@ -50,12 +44,21 @@ public class BoardImpl implements Board {
     @Override
     public Color getColor(IntVector2D pos) {
         validatePos(pos);
-        return board[pos.X()][pos.Y()];
+        return board.getOrDefault(pos,Color.EMPTY);
     }
 
+    /**
+     * Will just update the board only checking valid dimensions, contains no game logic
+     * @param pos position to update
+     * @param toSet color to set
+     */
     private void setColor(IntVector2D pos, Color toSet) {
         validatePos(pos);
-        board[pos.X()][pos.Y()] = toSet;
+        if(toSet == Color.EMPTY) {
+            board.remove(pos); //  no need to have useless cruft
+        } else {
+            board.put(pos, toSet);
+        }
     }
 
     private void validatePlaceMove(IntVector2D pos) {
