@@ -14,5 +14,7 @@ public class Driver {
         System.out.println(board.stringify());
         board.placePiece(IntVector2D.create(9,12), Color.BLACK);
         System.out.println(board.stringify());
+        board.undo();
+        System.out.println(board.stringify());
     }
 }
