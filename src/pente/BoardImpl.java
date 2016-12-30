@@ -18,6 +18,11 @@ public class BoardImpl implements Board {
         this.width = width;
         this.height = height;
         board = new Color[width][height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                setColor(IntVector2D.create(x,y),Color.EMPTY);
+            }
+        }
     }
 
     private boolean validPos(IntVector2D toCheck) {
