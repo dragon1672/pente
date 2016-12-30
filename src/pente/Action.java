@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class Action {
+public class Action {
     // {position, color change from, color change to}
     final List<Tuple3<IntVector2D, Color, Color>> changes;
 
