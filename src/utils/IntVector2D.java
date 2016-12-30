@@ -1,6 +1,8 @@
 package utils;
 
 import java.util.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Immutable 2d Int Vector
@@ -28,6 +30,19 @@ public class IntVector2D {
             }
         }
         ORDINAL_DIRECTIONS = Collections.unmodifiableList(tmp);
+    }
+
+    public static Stream<IntVector2D> getRange(int xMin, int xMax, int yMin, int yMax) {
+        if(xMin < xMax) {
+            throw new IllegalArgumentException(String.format("xMin(%s) greater than xMax(%s)",xMin,xMax));
+        }
+        if(yMin < yMax) {
+            throw new IllegalArgumentException(String.format("yMin(%s) greater than yMax(%s)",yMin,yMax));
+        }
+        return IntStream.range(xMin,xMax).mapToObj(x ->
+                IntStream.range(yMin,yMax).mapToObj(y->
+                        IntVector2D.create(x,y)))
+                .flatMap(stream->stream);
     }
 
     private IntVector2D(int x, int y) {
