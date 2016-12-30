@@ -104,12 +104,14 @@ public class BoardImpl implements Board {
         return action;
     }
 
-    /**
-     * Will not verify that the second param of the action is set correctly to the current board state
-     * @param toApply change to apply
-     */
     private void applyAction(Action toApply) {
-        toApply.changes.forEach(change -> setColor(change.getFirst(),change.getThird()));
+        toApply.changes.stream()
+                .peek(change -> {
+                    if(getColor(change.getFirst()) != change.getSecond()) {
+                        throw new IllegalArgumentException("Provided Action doesn't map current board state");
+                    }
+                })
+                .forEach(change -> setColor(change.getFirst(),change.getThird()));
     }
 
     @Override
