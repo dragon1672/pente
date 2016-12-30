@@ -28,6 +28,14 @@ public class Tuple {
         public T1 getFirst() {
             return first;
         }
+
+        @Override
+        public String toString() {
+            return "Tuple2{" +
+                    "first=" + first +
+                    ", second=" + second +
+                    '}';
+        }
     }
 
     public static <T1, T2> Tuple2<T1, T2> of(T1 first, T2 second) {
@@ -65,6 +73,14 @@ public class Tuple {
             return third;
         }
 
+        @Override
+        public String toString() {
+            return "Tuple3{" +
+                    "first=" + first +
+                    ", second=" + second +
+                    ", third=" + third +
+                    '}';
+        }
     }
 
     public static <T1, T2, T3> Tuple3<T1, T2, T3> of(T1 first, T2 second, T3 third) {

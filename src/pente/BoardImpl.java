@@ -117,4 +117,9 @@ public class BoardImpl implements Board {
             applyAction(lastAction.reverse());
         }
     }
+
+    @Override
+    public String toString() {
+        return stringify();
+    }
 }
