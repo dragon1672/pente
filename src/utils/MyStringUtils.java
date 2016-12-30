@@ -43,4 +43,44 @@ public class MyStringUtils {
         } while(hasWritten);
         return sb.toString();
     }
+
+    /**
+     * returns the character repeated the given number of times
+     * @param ch character to repeat
+     * @param length how many times to repeat
+     * @return repeated string
+     */
+    public static String repeatChar(char ch, int length) {
+        StringBuilder sb = new StringBuilder(Math.max(0,length));
+        for (int i = 0; i < length; i++) {
+            sb.append(ch);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * returns the character repeated the to fit the provided length with the end characters matching 'cap'
+     * Example return is "+-------+" where cap = '+' and ch = '-'
+     * @param ch character to repeate
+     * @param length how long the string should be
+     * @param cap cap
+     * @return formatted string
+     */
+    public static String repeatChar(char ch, int length, char cap) {
+        boolean canFitCaps = length > 1;
+        int bodyLength = canFitCaps ? length -2 : length;
+
+        StringBuilder sb = new StringBuilder(Math.max(0,length));
+
+        if(canFitCaps) {
+            sb.append(cap);
+        }
+        for (int i = 0; i < bodyLength; i++) {
+            sb.append(ch);
+        }
+        if(canFitCaps) {
+            sb.append(cap);
+        }
+        return sb.toString();
+    }
 }

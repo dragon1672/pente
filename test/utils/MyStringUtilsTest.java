@@ -43,4 +43,67 @@ public class MyStringUtilsTest {
         Assert.assertEquals(expected, output);
     }
 
+    @Test
+    public void testRepeat_zero() {
+        String expected = "";
+        String output = MyStringUtils.repeatChar('-',0);
+        Assert.assertEquals(expected, output);
+    }
+
+    @Test
+    public void testRepeat_negative() {
+        String expected = "";
+        String output = MyStringUtils.repeatChar('-', -1);
+        Assert.assertEquals(expected, output);
+    }
+
+    @Test
+    public void testRepeat_one() {
+        String expected = "-";
+        String output = MyStringUtils.repeatChar('-', 1);
+        Assert.assertEquals(expected, output);
+    }
+
+    @Test
+    public void testRepeat_two() {
+        String expected = "--";
+        String output = MyStringUtils.repeatChar('-', 2);
+        Assert.assertEquals(expected, output);
+    }
+
+    @Test
+    public void testRepeat() {
+        String expected = "-----";
+        String output = MyStringUtils.repeatChar('-', 5);
+        Assert.assertEquals(expected, output);
+    }
+
+    @Test
+    public void testRepeat_cap_negative() {
+        String expected = "";
+        String output = MyStringUtils.repeatChar('-', -1, '+');
+        Assert.assertEquals(expected, output);
+    }
+
+    @Test
+    public void testRepeat_cap_one() {
+        String expected = "-";
+        String output = MyStringUtils.repeatChar('-', 1, '+');
+        Assert.assertEquals(expected, output);
+    }
+
+    @Test
+    public void testRepeat_cap_two() {
+        String expected = "++";
+        String output = MyStringUtils.repeatChar('-', 2, '+');
+        Assert.assertEquals(expected, output);
+    }
+
+    @Test
+    public void testRepeat_cap() {
+        String expected = "+---+";
+        String output = MyStringUtils.repeatChar('-', 5, '+');
+        Assert.assertEquals(expected, output);
+    }
+
 }
