@@ -47,6 +47,11 @@ public class BoardImpl implements Board {
         return board.getOrDefault(pos,Color.EMPTY);
     }
 
+    @Override
+    public Stream<IntVector2D> getPieceLocations() {
+        return board.keySet().stream();
+    }
+
     /**
      * Will just update the board only checking valid dimensions, contains no game logic
      * @param pos position to update
