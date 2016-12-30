@@ -60,7 +60,7 @@ public class BoardImpl implements Board {
     private void validatePlaceMove(IntVector2D pos) {
         validatePos(pos);
         if(getColor(pos) != Color.EMPTY) {
-            throw new IllegalArgumentException("Pieces can only be placed on empty squares");
+            throw new IllegalArgumentException(String.format("valid placement pos (%s) Pieces can only be placed on empty squares, square already %s",pos,getColor(pos)));
         }
     }
 
