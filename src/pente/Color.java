@@ -1,7 +1,15 @@
 package pente;
 
 public enum Color {
-    WHITE, BLACK, EMPTY;
+    WHITE(true),
+    BLACK(true),
+    EMPTY(false);
+
+    final boolean isPlayer;
+
+    Color(boolean isPlayer) {
+        this.isPlayer = isPlayer;
+    }
 
     public char toChar() {
         switch (this) {

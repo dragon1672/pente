@@ -85,7 +85,7 @@ public class BoardImpl implements Board {
                     Color firstPosColor = validPos(positions.getFirst()) ? getColor(positions.getFirst()) : Color.EMPTY;
                     Color secondPosColor = validPos(positions.getSecond()) ? getColor(positions.getSecond()) : Color.EMPTY;
                     Color thirdPosColor = validPos(positions.getThird()) ? getColor(positions.getThird()) : Color.EMPTY;
-                    return firstPosColor != Color.EMPTY
+                    return firstPosColor.isPlayer
                             && secondPosColor == firstPosColor
                             && thirdPosColor == colorToPlace;
                 }).flatMap(positions -> Stream.of(positions.getFirst(), positions.getSecond()));
