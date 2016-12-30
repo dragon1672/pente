@@ -1,7 +1,6 @@
 package utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Immutable 2d Int Vector
@@ -11,6 +10,25 @@ public class IntVector2D {
     private static final Map<Integer,Map<Integer, IntVector2D>> cache = new HashMap<>();
     private final int x;
     private final int y;
+
+    public static final Collection<IntVector2D> CARDINAL_DIRECTIONS = Collections.unmodifiableList(Arrays.asList(
+            IntVector2D.create( 0, 1),
+            IntVector2D.create( 0,-1),
+            IntVector2D.create( 1, 0),
+            IntVector2D.create(-1, 0)
+    ));
+
+    public static final Collection<IntVector2D> ORDINAL_DIRECTIONS; static {
+        List<IntVector2D> tmp = new ArrayList<>();
+        for (int i = -1; i < 1; i++) {
+            for (int j = -1; j < 1; j++) {
+                if(i != -1 || j != -1) {
+                    tmp.add(IntVector2D.create(i,j));
+                }
+            }
+        }
+        ORDINAL_DIRECTIONS = Collections.unmodifiableList(tmp);
+    }
 
     private IntVector2D(int x, int y) {
         this.x = x;

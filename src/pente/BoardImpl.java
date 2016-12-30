@@ -2,17 +2,17 @@ package pente;
 
 import utils.IntVector2D;
 import utils.Tuple;
+import utils.Tuple.Tuple3;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class BoardImpl implements Board {
     private final int width;
     private final int height;
     private Color[][] board;
+
+    private Stack<Action> actionHistory = new Stack<>();
 
     public BoardImpl(int width, int height) {
         this.width = width;
@@ -43,43 +43,32 @@ public class BoardImpl implements Board {
 
     @Override
     public Color getColor(IntVector2D pos) {
-        validPos(pos);
+        validatePos(pos);
         return board[pos.X()][pos.Y()];
     }
 
     private void setColor(IntVector2D pos, Color toSet) {
-        validPos(pos);
+        validatePos(pos);
         board[pos.X()][pos.Y()] = toSet;
     }
 
     private void validatePlaceMove(IntVector2D pos) {
-        validPos(pos);
+        validatePos(pos);
         if(getColor(pos) != Color.EMPTY) {
             throw new IllegalArgumentException("Pieces can only be placed on empty squares");
         }
     }
 
-    private static final Collection<IntVector2D> directions; static {
-        List<IntVector2D> tmp = new ArrayList<>();
-        for (int i = -1; i < 1; i++) {
-            for (int j = -1; j < 1; j++) {
-                if(i != -1 || j != -1) {
-                    tmp.add(IntVector2D.create(i,j));
-                }
-            }
-        }
-
-        directions = Collections.unmodifiableList(tmp);
-    }
-
-    @Override
-    public MoveImplications placePiece(IntVector2D pos, Color colorToPlace) {
+    private Action queryMove(IntVector2D pos, Color colorToPlace) {
         validatePlaceMove(pos);
         if (colorToPlace == Color.EMPTY) {
             throw new IllegalArgumentException("Color to place cannot be empty");
         }
+        List<Tuple3<IntVector2D,Color,Color>> changesToApply = new ArrayList<>();
+        // q up initial placement
+        changesToApply.add(Tuple.of(pos,Color.EMPTY,colorToPlace));
         // check for captures
-        Stream<IntVector2D> capturedPositions = directions.stream()
+        Stream<IntVector2D> capturedPositions = IntVector2D.ORDINAL_DIRECTIONS.stream()
                 .map(dir -> {
                     IntVector2D firstPosToCheck = pos.add(dir);
                     IntVector2D secondPosToCheck = firstPosToCheck.add(dir);
@@ -94,8 +83,33 @@ public class BoardImpl implements Board {
                             && secondPosColor == firstPosColor
                             && thirdPosColor == colorToPlace;
                 }).flatMap(positions -> Stream.of(positions.getFirst(), positions.getSecond()));
+        capturedPositions
+                .map(capturedPos -> Tuple.of(capturedPos,getColor(capturedPos), Color.EMPTY))
+                .forEach(changesToApply::add);
+        return new Action(changesToApply);
+    }
 
+    @Override
+    public Action placePiece(IntVector2D pos, Color colorToPlace) {
+        Action action = queryMove(pos,colorToPlace);
+        actionHistory.add(action);
+        applyAction(action);
+        return action;
+    }
 
-        return MoveImplications.NOTHING_SPECIAL;
+    /**
+     * Will not verify that the second param of the action is set correctly to the current board state
+     * @param toApply change to apply
+     */
+    private void applyAction(Action toApply) {
+        toApply.changes.forEach(change -> setColor(change.getFirst(),change.getThird()));
+    }
+
+    @Override
+    public void undo() {
+        if(actionHistory.size() > 0) {
+            Action lastAction = actionHistory.pop();
+            applyAction(lastAction.reverse());
+        }
     }
 }
