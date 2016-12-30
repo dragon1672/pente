@@ -28,12 +28,14 @@ public class GameManager implements BoardEventManager {
     void gameTick() {
         ColoredPlayer movingPlayer = currentPlayer;
         ColoredPlayer nextPlayer = getNextPlayer();
-        Action move = null;
+        BoardDiff move = null;
         while(currentPlayer != nextPlayer) {
             try {
                 IntVector2D moveToMake = currentPlayer.player.placePiece(board,currentPlayer.color);
                 move = board.placePiece(moveToMake,currentPlayer.color);
-                currentPlayer = nextPlayer;
+                if(move.changes.size() > 0) {
+                    currentPlayer = nextPlayer;
+                }
             } catch (IllegalArgumentException e) {
                 // player tried invalid move :(
             }
@@ -50,7 +52,7 @@ public class GameManager implements BoardEventManager {
     }
 
     @Override
-    public void addOnBoardChangeListener(Consumer<Action> listener) {
+    public void addOnBoardChangeListener(Consumer<BoardDiff> listener) {
         board.addOnBoardChangeListener(listener);
     }
 

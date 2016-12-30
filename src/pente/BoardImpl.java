@@ -12,8 +12,8 @@ public class BoardImpl implements Board {
     private final int height;
     private Color[][] board;
 
-    private Stack<Action> actionHistory = new Stack<>();
-    private Stack<Action> redoCache = new Stack<>();
+    private Stack<BoardDiff> boardDiffHistory = new Stack<>();
+    private Stack<BoardDiff> redoCache = new Stack<>();
 
     public BoardImpl(int width, int height) {
         this.width = width;
@@ -65,7 +65,7 @@ public class BoardImpl implements Board {
         }
     }
 
-    private Action queryMove(IntVector2D pos, Color colorToPlace) {
+    private BoardDiff queryMove(IntVector2D pos, Color colorToPlace) {
         validatePlaceMove(pos);
         if (colorToPlace == Color.EMPTY) {
             throw new IllegalArgumentException("Color to place cannot be empty");
@@ -92,46 +92,44 @@ public class BoardImpl implements Board {
         capturedPositions
                 .map(capturedPos -> Tuple.of(capturedPos,getColor(capturedPos), Color.EMPTY))
                 .forEach(changesToApply::add);
-        return new Action(changesToApply);
+        return new BoardDiff(changesToApply);
     }
 
     @Override
-    public Action placePiece(IntVector2D pos, Color colorToPlace) {
+    public BoardDiff placePiece(IntVector2D pos, Color colorToPlace) {
         redoCache.clear();
-        Action action = queryMove(pos,colorToPlace);
-        actionHistory.add(action);
-        applyAction(action);
-        return action;
+        BoardDiff boardDiff = queryMove(pos,colorToPlace);
+        applyBoardDiff(boardDiff,boardDiffHistory);
+        return boardDiff;
     }
 
-    private void applyAction(Action toApply) {
+    private void applyBoardDiff(BoardDiff toApply, Collection<BoardDiff> historyToAppendTo) {
         toApply.changes.stream()
                 .peek(change -> {
                     if(getColor(change.getFirst()) != change.getSecond()) {
-                        throw new IllegalArgumentException("Provided Action doesn't map current board state");
+                        throw new IllegalArgumentException("Provided BoardDiff doesn't map current board state");
                     }
                 })
                 .forEach(change -> setColor(change.getFirst(),change.getThird()));
+        historyToAppendTo.add(toApply);
     }
 
     @Override
-    public Optional<Action> undo() {
-        if(actionHistory.size() > 0) {
-            Action lastActionReversed = actionHistory.pop().reverse();
-            applyAction(lastActionReversed);
-            redoCache.add(lastActionReversed);
-            return Optional.of(lastActionReversed);
+    public Optional<BoardDiff> undo() {
+        if(boardDiffHistory.size() > 0) {
+            BoardDiff lastBoardDiffReversed = boardDiffHistory.pop().reverse();
+            applyBoardDiff(lastBoardDiffReversed,redoCache);
+            return Optional.of(lastBoardDiffReversed);
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<Action> redo() {
+    public Optional<BoardDiff> redo() {
         if(redoCache.size() > 0) {
-            Action lastActionReversed = redoCache.pop().reverse();
-            applyAction(lastActionReversed);
-            actionHistory.add(lastActionReversed);
-            return Optional.of(lastActionReversed);
+            BoardDiff lastBoardDiffReversed = redoCache.pop().reverse();
+            applyBoardDiff(lastBoardDiffReversed,boardDiffHistory);
+            return Optional.of(lastBoardDiffReversed);
         }
         return Optional.empty();
     }

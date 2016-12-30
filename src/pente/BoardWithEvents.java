@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class BoardWithEvents implements BoardEventManager, Board {
-    private final List<Consumer<Action>> listeners = new ArrayList<>();
+    private final List<Consumer<BoardDiff>> listeners = new ArrayList<>();
     private final Board backbone;
 
     public BoardWithEvents(Board backbone) {
@@ -16,16 +16,16 @@ public class BoardWithEvents implements BoardEventManager, Board {
     }
 
     @Override
-    public void addOnBoardChangeListener(Consumer<Action> listener) {
+    public void addOnBoardChangeListener(Consumer<BoardDiff> listener) {
         listeners.add(listener);
     }
 
-    private Action emitEvent(Action toEmit) {
+    private BoardDiff emitEvent(BoardDiff toEmit) {
         listeners.forEach(listener->listener.accept(toEmit));
         return toEmit;
     }
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private Optional<Action> emitEvent(Optional<Action> toEmit) {
+    private Optional<BoardDiff> emitEvent(Optional<BoardDiff> toEmit) {
         toEmit.ifPresent(this::emitEvent);
         return toEmit;
     }
@@ -46,17 +46,17 @@ public class BoardWithEvents implements BoardEventManager, Board {
     }
 
     @Override
-    public Action placePiece(IntVector2D pos, Color colorToPlace) {
+    public BoardDiff placePiece(IntVector2D pos, Color colorToPlace) {
         return emitEvent(backbone.placePiece(pos,colorToPlace));
     }
 
     @Override
-    public Optional<Action> undo() {
+    public Optional<BoardDiff> undo() {
         return emitEvent(backbone.undo());
     }
 
     @Override
-    public Optional<Action> redo() {
+    public Optional<BoardDiff> redo() {
         return emitEvent(backbone.redo());
     }
 }
