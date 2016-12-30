@@ -13,6 +13,7 @@ public class BoardImpl implements Board {
     private Color[][] board;
 
     private Stack<Action> actionHistory = new Stack<>();
+    private Stack<Action> redoCache = new Stack<>();
 
     public BoardImpl(int width, int height) {
         this.width = width;
@@ -96,6 +97,7 @@ public class BoardImpl implements Board {
 
     @Override
     public Action placePiece(IntVector2D pos, Color colorToPlace) {
+        redoCache.clear();
         Action action = queryMove(pos,colorToPlace);
         actionHistory.add(action);
         applyAction(action);
@@ -111,11 +113,25 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public void undo() {
+    public Optional<Action> undo() {
         if(actionHistory.size() > 0) {
-            Action lastAction = actionHistory.pop();
-            applyAction(lastAction.reverse());
+            Action lastActionReversed = actionHistory.pop().reverse();
+            applyAction(lastActionReversed);
+            redoCache.add(lastActionReversed);
+            return Optional.of(lastActionReversed);
         }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Action> redo() {
+        if(redoCache.size() > 0) {
+            Action lastActionReversed = redoCache.pop().reverse();
+            applyAction(lastActionReversed);
+            actionHistory.add(lastActionReversed);
+            return Optional.of(lastActionReversed);
+        }
+        return Optional.empty();
     }
 
     @Override

@@ -16,5 +16,7 @@ public class Driver {
         System.out.println(board.stringify());
         board.undo();
         System.out.println(board.stringify());
+        board.redo();
+        System.out.println(board.stringify());
     }
 }
