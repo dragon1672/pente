@@ -1,5 +1,6 @@
 package pente.utils;
 
+import pente.board.Color;
 import pente.board.ReadOnlyBoard;
 import utils.IntVector2D;
 import utils.Tuple;
@@ -19,11 +20,12 @@ public class BoardUtilities {
         Set<IntVector2D> consideredPositions = new HashSet<>();
         return IntVector2D.getRangeXY(0, board.getWidth(), 0, board.getHeight())
                 .filter(pos -> !consideredPositions.contains(pos))
+                .filter(pos -> board.getColor(pos) != Color.EMPTY)
                 .flatMap(pos -> POSITIVE_ORDINAL_DIRECTIONS.stream().map(dir -> Tuple.of(pos, dir)))
                 .map(posDir -> {
                     Set<IntVector2D> strand = new HashSet<>();
                     IntVector2D current = posDir.getFirst();
-                    while (board.getColor(current) == board.getColor(posDir.getFirst())) {
+                    while (board.validPos(current) && board.getColor(current) == board.getColor(posDir.getFirst())) {
                         consideredPositions.add(current);
                         strand.add(current);
                         current = current.add(posDir.getSecond());
