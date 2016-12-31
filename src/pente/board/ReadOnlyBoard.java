@@ -27,6 +27,11 @@ public interface ReadOnlyBoard {
      */
     Color getColor(IntVector2D pos);
 
+    default boolean validPos(IntVector2D toCheck) {
+        return 0 <= toCheck.X() && toCheck.X() < getWidth()
+                && 0 <= toCheck.Y() && toCheck.Y() < getHeight();
+    }
+
     /**
      * Returns a stream of all valid positions (positions not moves) in the current board
      * @return a stream of locations

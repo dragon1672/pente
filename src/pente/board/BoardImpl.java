@@ -20,11 +20,6 @@ public class BoardImpl implements Board {
         this.height = height;
     }
 
-    private boolean validPos(IntVector2D toCheck) {
-        return 0 <= toCheck.X() && toCheck.X() < getWidth()
-                && 0 <= toCheck.Y() && toCheck.Y() < getHeight();
-    }
-
     private void validatePos(IntVector2D toCheck) {
         if(!validPos(toCheck)) {
             throw new IllegalArgumentException(String.format("pos(%s) is invalid",toCheck));
