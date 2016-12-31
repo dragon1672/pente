@@ -23,6 +23,9 @@ public class GameManager implements BoardEventManager {
         playerManager = new PlayerManager(p1, p2);
     }
 
+    /*
+    This code stink and should be cleaned up, the return should provide more info, ditto on the board update method
+     */
     boolean gameTick() {
         Player currentPlayer = playerManager.getCurrentPlayer();
         BoardDiff move = null;
