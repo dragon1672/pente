@@ -22,9 +22,9 @@ public class IntVector2D {
 
     public static final Collection<IntVector2D> ORDINAL_DIRECTIONS; static {
         List<IntVector2D> tmp = new ArrayList<>();
-        for (int i = -1; i < 1; i++) {
-            for (int j = -1; j < 1; j++) {
-                if(i != -1 || j != -1) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if(i != 0 || j != 0) {
                     tmp.add(IntVector2D.create(i,j));
                 }
             }
