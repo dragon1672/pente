@@ -1,4 +1,4 @@
-package pente;
+package pente.board;
 
 import utils.IntVector2D;
 import utils.Tuple;
@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class BoardImpl implements Board {
     private final int width;
     private final int height;
-    private Map<IntVector2D,Color> board = new HashMap<>();
+    private Map<IntVector2D, Color> board = new HashMap<>();
 
     private Stack<BoardDiff> boardDiffHistory = new Stack<>();
     private Stack<BoardDiff> redoCache = new Stack<>();

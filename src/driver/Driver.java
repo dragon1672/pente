@@ -1,6 +1,8 @@
 package driver;
 
-import pente.*;
+import pente.board.BoardImpl;
+import pente.board.BoardWithEvents;
+import pente.board.Color;
 import utils.IntVector2D;
 
 public class Driver {

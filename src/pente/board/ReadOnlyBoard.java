@@ -1,4 +1,4 @@
-package pente;
+package pente.board;
 
 import utils.IntVector2D;
 import utils.MyStringUtils;
@@ -32,7 +32,7 @@ public interface ReadOnlyBoard {
      * @return a stream of locations
      */
     default Stream<IntVector2D> getAllBoardPositions() {
-        return IntVector2D.getRange(0,getWidth(),0,getHeight());
+        return IntVector2D.getRangeXY(0,getWidth(),0,getHeight());
     }
 
     /**

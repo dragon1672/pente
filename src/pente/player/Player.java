@@ -1,7 +1,7 @@
-package game.player;
+package pente.player;
 
-import pente.Color;
-import pente.ReadOnlyBoard;
+import pente.board.Color;
+import pente.board.ReadOnlyBoard;
 import utils.IntVector2D;
 
 public interface Player {

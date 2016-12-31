@@ -32,17 +32,22 @@ public class IntVector2D {
         ORDINAL_DIRECTIONS = Collections.unmodifiableList(tmp);
     }
 
-    public static Stream<IntVector2D> getRange(int xMin, int xMax, int yMin, int yMax) {
-        if(xMin < xMax) {
-            throw new IllegalArgumentException(String.format("xMin(%s) greater than xMax(%s)",xMin,xMax));
-        }
-        if(yMin < yMax) {
-            throw new IllegalArgumentException(String.format("yMin(%s) greater than yMax(%s)",yMin,yMax));
-        }
-        return IntStream.range(xMin,xMax).mapToObj(x ->
-                IntStream.range(yMin,yMax).mapToObj(y->
-                        IntVector2D.create(x,y)))
+    public static Stream<IntVector2D> getRangeXY(int xFrom, int xTo, int yFrom, int yTo) {
+        int xSize = Math.abs(xTo - xFrom);
+        int xDir = (xTo - xFrom) /xSize;
+        int ySize = Math.abs(yTo - yFrom);
+        int yDir = (yTo - yFrom) / ySize;
+
+        return IntStream.range(0,xSize).mapToObj(x ->
+                IntStream.range(0,ySize).mapToObj(y->
+                        IntVector2D.create(x * xDir,y * yDir)))
                 .flatMap(stream->stream);
+    }
+
+    public static Stream<IntVector2D> getRangeYX(int xFrom, int xTo, int yFrom, int yTo) {
+        //noinspection SuspiciousNameCombination
+        return getRangeXY(yFrom,yTo,xFrom,xTo)
+                .map(pos -> IntVector2D.create(pos.Y(),pos.X()));
     }
 
     private IntVector2D(int x, int y) {

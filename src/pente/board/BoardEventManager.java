@@ -1,4 +1,4 @@
-package pente;
+package pente.board;
 
 import java.util.function.Consumer;
 

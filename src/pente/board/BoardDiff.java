@@ -1,4 +1,4 @@
-package pente;
+package pente.board;
 
 import utils.IntVector2D;
 import utils.Tuple;

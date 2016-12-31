@@ -1,4 +1,4 @@
-package pente;
+package pente.board;
 
 public enum Color {
     WHITE(true),
