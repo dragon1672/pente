@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class BoardWithEvents implements BoardEventManager, Board {
-    private final List<Consumer<BoardDiff>> listeners = new ArrayList<>();
+    private final List<Consumer<BoardChangeEvent>> listeners = new ArrayList<>();
     private final Board backbone;
 
     public BoardWithEvents(Board backbone) {
@@ -16,12 +16,12 @@ public class BoardWithEvents implements BoardEventManager, Board {
     }
 
     @Override
-    public void addOnBoardChangeListener(Consumer<BoardDiff> listener) {
+    public void addOnBoardChangeListener(Consumer<BoardChangeEvent> listener) {
         listeners.add(listener);
     }
 
     private BoardDiff emitEvent(BoardDiff toEmit) {
-        listeners.forEach(listener->listener.accept(toEmit));
+        listeners.forEach(listener->listener.accept(new BoardChangeEvent(toEmit, this)));
         return toEmit;
     }
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

@@ -1,8 +1,8 @@
 package pente.board;
 
+import pente.board.BoardDiff.SingleDif;
 import utils.IntVector2D;
 import utils.Tuple;
-import utils.Tuple.Tuple3;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -73,9 +73,9 @@ public class BoardImpl implements Board {
         if (colorToPlace == Color.EMPTY) {
             throw new IllegalArgumentException("Color to place cannot be empty");
         }
-        List<Tuple3<IntVector2D,Color,Color>> changesToApply = new ArrayList<>();
+        List<SingleDif> changesToApply = new ArrayList<>();
         // q up initial placement
-        changesToApply.add(Tuple.of(pos,Color.EMPTY,colorToPlace));
+        changesToApply.add(new SingleDif(pos,Color.EMPTY,colorToPlace));
         // check for captures
         Stream<IntVector2D> capturedPositions = IntVector2D.ORDINAL_DIRECTIONS.stream()
                 .map(dir -> {
@@ -93,7 +93,7 @@ public class BoardImpl implements Board {
                             && thirdPosColor == colorToPlace;
                 }).flatMap(positions -> Stream.of(positions.getFirst(), positions.getSecond()));
         capturedPositions
-                .map(capturedPos -> Tuple.of(capturedPos,getColor(capturedPos), Color.EMPTY))
+                .map(capturedPos -> new SingleDif(capturedPos,getColor(capturedPos), Color.EMPTY))
                 .forEach(changesToApply::add);
         return new BoardDiff(changesToApply);
     }
@@ -109,11 +109,11 @@ public class BoardImpl implements Board {
     private void applyBoardDiff(BoardDiff toApply, Collection<BoardDiff> historyToAppendTo) {
         toApply.changes.stream()
                 .peek(change -> {
-                    if(getColor(change.getFirst()) != change.getSecond()) {
+                    if(getColor(change.pos) != change.replacedColor) {
                         throw new IllegalArgumentException("Provided BoardDiff doesn't map current board state");
                     }
                 })
-                .forEach(change -> setColor(change.getFirst(),change.getThird()));
+                .forEach(change -> setColor(change.pos,change.newColor));
         historyToAppendTo.add(toApply);
     }
 

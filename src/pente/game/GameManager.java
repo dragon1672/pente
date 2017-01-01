@@ -83,7 +83,7 @@ public class GameManager implements BoardEventManager {
     }
 
     @Override
-    public void addOnBoardChangeListener(Consumer<BoardDiff> listener) {
+    public void addOnBoardChangeListener(Consumer<BoardChangeEvent> listener) {
         board.addOnBoardChangeListener(listener);
     }
 
