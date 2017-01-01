@@ -3,6 +3,7 @@ package pente.game;
 import pente.board.Color;
 import pente.player.PlayerBrain;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
@@ -11,16 +12,20 @@ import java.util.stream.Stream;
 
 class PlayerManager {
     final List<Player> players;
-    int currentPlayer = 0;
+    private int currentPlayer = 0;
 
-    PlayerManager(PlayerBrain... brains) {
+    PlayerManager(List<Player> players) {
+        this.players = Collections.unmodifiableList(players);
+    }
+
+    public static PlayerManager createFromBrains(PlayerBrain ... brains) {
         Stack<Color> possibleColors = Stream.of(Color.values())
                 .filter(color -> color.isPlayer)
                 .collect(Collectors.toCollection(Stack::new));
 
-        players = Stream.of(brains)
+        return new PlayerManager(Stream.of(brains)
                 .map(brain -> new Player(brain, possibleColors.pop()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     Player getCurrentPlayer() {

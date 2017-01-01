@@ -20,13 +20,13 @@ public class GameManager implements BoardEventManager {
     private final PlayerManager playerManager;
 
     public GameManager(PlayerBrain p1, PlayerBrain p2) {
-        playerManager = new PlayerManager(p1, p2);
+        playerManager = PlayerManager.createFromBrains(p1, p2);
     }
 
     /*
     This code stink and should be cleaned up, the return should provide more info, ditto on the board update method
      */
-    boolean gameTick() {
+    private boolean gameTick() {
         Player currentPlayer = playerManager.getCurrentPlayer();
         BoardDiff move = null;
         while (playerManager.getCurrentPlayer() == currentPlayer) {
